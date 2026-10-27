@@ -1,0 +1,12 @@
+node_modules/
+dist/
+reports/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+*.zip
+.DS_Store
+.idea/
+.vscode/

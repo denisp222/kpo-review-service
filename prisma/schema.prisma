@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum WorkStatus {
+  submitted
+  reviewed
+  rejected
+}
+
+model Work {
+  id              String         @id
+  studentId       String
+  teacherId       String
+  status          WorkStatus     @default(submitted)
+  grade           Int?
+  comment         String?
+  recommendations String?
+  notifications   Notification[]
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  studentId String
+  workId    String
+  message   String
+  createdAt DateTime @default(now())
+  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}

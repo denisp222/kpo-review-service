@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: review
+      POSTGRES_PASSWORD: local_demo_password
+      POSTGRES_DB: review
+    ports:
+      - '127.0.0.1:5438:5432'
+    volumes:
+      - review_data:/var/lib/postgresql/data
+  test-db:
+    image: postgres:16-alpine
+    profiles: [test]
+    environment:
+      POSTGRES_USER: review
+      POSTGRES_PASSWORD: local_test_password
+      POSTGRES_DB: review_test
+    ports:
+      - '127.0.0.1:5439:5432'
+volumes:
+  review_data:
