@@ -79,6 +79,7 @@ jobs:
           name: build-${{ github.sha }}
           path: |
             dist/
+            prototype/dist/
             prisma/
             package.json
             package-lock.json
@@ -112,4 +113,6 @@ jobs:
           TAG: ${{ github.ref_name }}
         run: |
           tar -czf "$TAG.tar.gz" -C release-build .
-          gh release create "$TAG" "$TAG.tar.gz" --verify-tag --title "$TAG" --notes-file CHANGELOG.md
+          flags=()
+          if [[ "$TAG" == *-* ]]; then flags+=(--prerelease); fi
+          gh release create "$TAG" "$TAG.tar.gz" release-build/prototype/dist/prototype.html --verify-tag --title "$TAG" --notes-file CHANGELOG.md "${flags[@]}"
