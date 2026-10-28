@@ -123,8 +123,8 @@ git commit -m "docs: record infrastructure metrics"
 ```powershell
 git switch main
 git pull --ff-only
-git tag -a v0.1.0 -m "Release 0.1.0"
-git push origin v0.1.0
+git tag -a v0.1.1 -m "Release 0.1.1"
+git push origin v0.1.1
 ```
 
 CI заново проверяет тег. Release создаётся только после успешных проверок, совпадения тега с версией пакета и проверки, что коммит входит в историю `main`. Архив содержит `dist`, схему и миграции Prisma, `package.json` и lock-файл. Для запуска после распаковки выполните `npm ci`, `npm run db:generate`, настройте `.env`, примените миграции и выполните `npm start`.
