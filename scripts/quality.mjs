@@ -34,7 +34,7 @@ run('lint', 'node_modules/eslint/bin/eslint.js', [
 run('typecheck', 'node_modules/typescript/bin/tsc', ['--noEmit']);
 run('tests', 'node_modules/vitest/vitest.mjs', ['run', '--coverage']);
 if (steps.every((step) => step.success)) {
-  run('build', 'node_modules/typescript/bin/tsc', ['-p', 'tsconfig.build.json']);
+  run('build', 'scripts/build.mjs');
 }
 const pipeline = {
   measuredAt: new Date().toISOString(),
