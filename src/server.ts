@@ -6,7 +6,10 @@ import { ReviewService } from './reviews/service.js';
 
 const db = new PrismaClient();
 const repository = new PrismaRepository(db);
-const authenticate = demoAuth(process.env.TEACHER_TOKEN ?? '', process.env.STUDENT_TOKEN ?? '');
+const authenticate = demoAuth(
+  process.env.DEMO_TEACHER_TOKEN ?? '',
+  process.env.DEMO_STUDENT_TOKEN ?? '',
+);
 const app = createApp(new ReviewService(repository), repository, authenticate);
 const port = Number(process.env.PORT ?? 3000);
 const server = app.listen(port, process.env.HOST ?? '127.0.0.1', () => {
