@@ -17,6 +17,7 @@
     "prisma/seed.ts",
     "vitest.config.ts",
     "prototype/src/**/*.ts",
-    "prototype/src/**/*.tsx"
+    "prototype/src/**/*.tsx",
+    "playwright.config.ts"
   ]
 }

@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { collectMetrics } from './metrics.mjs';
+import { writeTestReport } from './test-report.mjs';
 
 // Discard previous reports so a failed check cannot reuse old successful results.
 rmSync('reports', { recursive: true, force: true });
@@ -34,14 +35,17 @@ run('lint', 'node_modules/eslint/bin/eslint.js', [
 run('typecheck', 'node_modules/typescript/bin/tsc', ['--noEmit']);
 run('tests', 'node_modules/vitest/vitest.mjs', ['run', '--coverage']);
 if (steps.every((step) => step.success)) {
-  run('build', 'scripts/build.mjs');
+  if (run('build', 'scripts/build.mjs')) {
+    run('browser', 'node_modules/@playwright/test/cli.js', ['test']);
+  }
 }
 const pipeline = {
   measuredAt: new Date().toISOString(),
-  success: steps.length === 5 && steps.every((step) => step.success),
+  success: steps.length === 6 && steps.every((step) => step.success),
   seconds: Number(((performance.now() - started) / 1000).toFixed(3)),
   steps,
 };
 writeFileSync('reports/pipeline.json', JSON.stringify(pipeline, null, 2) + '\n');
 collectMetrics();
+writeTestReport();
 if (!pipeline.success) process.exitCode = 1;

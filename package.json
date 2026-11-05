@@ -1,6 +1,6 @@
 {
   "name": "kpo-review-service",
-  "version": "0.2.0-prototype.1",
+  "version": "0.3.0-testing.1",
   "private": true,
   "description": "Учебный проект рецензирования работ: КПО, лабораторные №5–6",
   "type": "module",
@@ -25,7 +25,10 @@
     "quality": "node scripts/quality.mjs",
     "metrics": "node scripts/metrics.mjs",
     "snapshot": "node scripts/snapshot.mjs",
-    "build:prototype": "node prototype/build.mjs"
+    "build:prototype": "node prototype/build.mjs",
+    "test:e2e": "npm run build:prototype && playwright test",
+    "test:report": "playwright show-report reports/playwright",
+    "report": "node scripts/test-report.mjs"
   },
   "overrides": {
     "deepmerge-ts": "8.0.2"
@@ -40,10 +43,14 @@
     "@commitlint/cli": "^20.0.0",
     "@commitlint/config-conventional": "^20.0.0",
     "@eslint/js": "9.39.5",
+    "@playwright/test": "1.64.1",
     "@types/express": "^5.0.0",
     "@types/node": "^24.0.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "@types/supertest": "^6.0.0",
     "@vitest/coverage-v8": "4.1.12",
+    "esbuild": "0.28.2",
     "eslint": "9.39.5",
     "globals": "^16.0.0",
     "husky": "^9.1.7",
@@ -53,9 +60,6 @@
     "tsx": "^4.20.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.72.1",
-    "vitest": "4.1.12",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "esbuild": "0.28.2"
+    "vitest": "4.1.12"
   }
 }

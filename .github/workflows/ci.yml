@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: Этап для снимка метрик
+        description: Р­С‚Р°Рї РґР»СЏ СЃРЅРёРјРєР° РјРµС‚СЂРёРє
         type: choice
         default: lab5-baseline
         options:
@@ -55,6 +55,8 @@ jobs:
         run: node scripts/check-commits.mjs
       - run: npm run db:generate
       - run: npm run db:migrate
+      - name: Install Chromium for user tests
+        run: npx playwright install --with-deps chromium
       - name: Lint, tests, coverage, build
         if: github.event_name != 'workflow_dispatch'
         run: npm run quality
@@ -80,6 +82,8 @@ jobs:
           path: |
             dist/
             prototype/dist/
+            reports/summary.html
+            reports/metrics.json
             prisma/
             package.json
             package-lock.json
@@ -115,4 +119,4 @@ jobs:
           tar -czf "$TAG.tar.gz" -C release-build .
           flags=()
           if [[ "$TAG" == *-* ]]; then flags+=(--prerelease); fi
-          gh release create "$TAG" "$TAG.tar.gz" release-build/prototype/dist/prototype.html --verify-tag --title "$TAG" --notes-file CHANGELOG.md "${flags[@]}"
+          gh release create "$TAG" "$TAG.tar.gz" release-build/prototype/dist/prototype.html release-build/reports/summary.html release-build/reports/metrics.json --verify-tag --title "$TAG" --notes-file CHANGELOG.md "${flags[@]}"
