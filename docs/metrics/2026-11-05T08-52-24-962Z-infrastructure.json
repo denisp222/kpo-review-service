@@ -1,0 +1,21 @@
+{
+  "stage": "infrastructure",
+  "measuredAt": "2026-11-05T08:52:24.962Z",
+  "commit": "687434b5508ce650b621f53c37f6ba55b14a7e6e",
+  "runUrl": null,
+  "lintErrors": 0,
+  "lintWarnings": 0,
+  "testsPassed": 68,
+  "testsFailed": 0,
+  "testsSkipped": 0,
+  "testSeconds": 1.873,
+  "lineCoveragePercent": 100,
+  "branchCoveragePercent": 98.38,
+  "buildSeconds": 1.193,
+  "browserTestsPassed": 25,
+  "browserTestsFailed": 0,
+  "browserTestsSkipped": 0,
+  "browserSeconds": 12.467,
+  "qualitySeconds": 18.955,
+  "qualityPassed": true
+}
