@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       stage:
-        description: Этап для снимка метрик
+        description: Р­С‚Р°Рї РґР»СЏ СЃРЅРёРјРєР° РјРµС‚СЂРёРє
         type: choice
         default: lab5-baseline
         options:
@@ -55,6 +55,8 @@ jobs:
         run: node scripts/check-commits.mjs
       - run: npm run db:generate
       - run: npm run db:migrate
+      - name: Install Chromium for user tests
+        run: npx playwright install --with-deps chromium
       - name: Lint, tests, coverage, build
         if: github.event_name != 'workflow_dispatch'
         run: npm run quality
