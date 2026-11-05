@@ -82,6 +82,8 @@ jobs:
           path: |
             dist/
             prototype/dist/
+            reports/summary.html
+            reports/metrics.json
             prisma/
             package.json
             package-lock.json
@@ -117,4 +119,4 @@ jobs:
           tar -czf "$TAG.tar.gz" -C release-build .
           flags=()
           if [[ "$TAG" == *-* ]]; then flags+=(--prerelease); fi
-          gh release create "$TAG" "$TAG.tar.gz" release-build/prototype/dist/prototype.html --verify-tag --title "$TAG" --notes-file CHANGELOG.md "${flags[@]}"
+          gh release create "$TAG" "$TAG.tar.gz" release-build/prototype/dist/prototype.html release-build/reports/summary.html release-build/reports/metrics.json --verify-tag --title "$TAG" --notes-file CHANGELOG.md "${flags[@]}"
