@@ -9,7 +9,7 @@ export function collectMetrics() {
   const coverage = read('reports/coverage/coverage-summary.json');
   const browser = read('reports/e2e.json');
   const pipeline = read('reports/pipeline.json');
-  if (!pipeline) throw new Error('РЎРЅР°С‡Р°Р»Р° РІС‹РїРѕР»РЅРёС‚Рµ npm run quality');
+  if (!pipeline) throw new Error('Сначала выполните npm run quality');
   let commit = null;
   try {
     commit = execFileSync('git', ['rev-parse', 'HEAD'], {
@@ -43,19 +43,19 @@ export function collectMetrics() {
   };
   writeFileSync('reports/metrics.json', JSON.stringify(metrics, null, 2) + '\n');
   const rows = Object.entries(metrics).map(
-    ([key, value]) => `| ${key} | ${value ?? 'РЅРµС‚ РґР°РЅРЅС‹С…'} |`,
+    ([key, value]) => `| ${key} | ${value ?? 'нет данных'} |`,
   );
   writeFileSync(
     'reports/metrics.md',
     [
-      '# Р РµР·СѓР»СЊС‚Р°С‚С‹ РїСЂРѕРІРµСЂРѕРє',
+      '# Результаты проверок',
       '',
-      '| РњРµС‚СЂРёРєР° | Р—РЅР°С‡РµРЅРёРµ |',
+      '| Метрика | Значение |',
       '| --- | --- |',
       ...rows,
       '',
-      'testSeconds РІРєР»СЋС‡Р°РµС‚ Р·Р°РїСѓСЃРє Vitest Рё СЃР±РѕСЂ РїРѕРєСЂС‹С‚РёСЏ. qualitySeconds вЂ” РґР»РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р»РѕРєР°Р»СЊРЅРѕРіРѕ РЅР°Р±РѕСЂР° РїСЂРѕРІРµСЂРѕРє Р±РµР· СѓСЃС‚Р°РЅРѕРІРєРё Р·Р°РІРёСЃРёРјРѕСЃС‚РµР№.',
-      'РџРѕРєСЂС‹С‚РёРµ СЂР°СЃСЃС‡РёС‚Р°РЅРѕ РґР»СЏ src (РєСЂРѕРјРµ Р·Р°РїСѓСЃРєР° СЃРµСЂРІРµСЂР° src/server.ts) Рё prototype/src/store.ts. Р’РёР·СѓР°Р»СЊРЅС‹Рµ РєРѕРјРїРѕРЅРµРЅС‚С‹ React РїСЂРѕРІРµСЂСЏСЋС‚СЃСЏ РѕС‚РґРµР»СЊРЅС‹РјРё Р±СЂР°СѓР·РµСЂРЅС‹РјРё СЃС†РµРЅР°СЂРёСЏРјРё Рё РІ РїСЂРѕС†РµРЅС‚ РїРѕРєСЂС‹С‚РёСЏ РЅРµ РІС…РѕРґСЏС‚.',
+      'testSeconds включает запуск Vitest и сбор покрытия. qualitySeconds — длительность локального набора проверок без установки зависимостей.',
+      'Покрытие рассчитано для src (кроме запуска сервера src/server.ts) и prototype/src/store.ts. Визуальные компоненты React проверяются отдельными браузерными сценариями и в процент покрытия не входят.',
       '',
     ].join('\n'),
   );
