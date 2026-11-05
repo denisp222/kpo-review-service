@@ -1,6 +1,6 @@
 {
   "name": "kpo-review-service",
-  "version": "0.3.0-testing.1",
+  "version": "0.3.0-testing.2",
   "private": true,
   "description": "Учебный проект рецензирования работ: КПО, лабораторные №5–6",
   "type": "module",
