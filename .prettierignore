@@ -4,3 +4,6 @@ reports
 coverage
 package-lock.json
 prisma/migrations
+
+web/dist/
+data/

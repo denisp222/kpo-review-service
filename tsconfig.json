@@ -18,6 +18,8 @@
     "vitest.config.ts",
     "prototype/src/**/*.ts",
     "prototype/src/**/*.tsx",
-    "playwright.config.ts"
+    "playwright.config.ts",
+    "web/src/**/*.ts",
+    "web/src/**/*.tsx"
   ]
 }

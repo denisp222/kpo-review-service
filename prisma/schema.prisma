@@ -22,15 +22,111 @@ model Work {
   comment         String?
   recommendations String?
   notifications   Notification[]
+  assignmentId    String?
+  fileId          String?        @unique
+  studentComment  String         @default("")
+  createdAt       DateTime       @default(now())
+  reviewedAt      DateTime?
+  student         User           @relation("StudentWorks", fields: [studentId], references: [id])
+  teacher         User           @relation("TeacherWorks", fields: [teacherId], references: [id])
+  assignment      Assignment?    @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  file            StoredFile?    @relation(fields: [fileId], references: [id])
+
+  @@unique([assignmentId, studentId])
+  @@index([teacherId, status])
 }
 
 model Notification {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   studentId String
   workId    String
   message   String
-  createdAt DateTime @default(now())
-  work      Work     @relation(fields: [workId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+  work      Work      @relation(fields: [workId], references: [id], onDelete: Cascade)
 
   @@index([studentId])
+}
+
+enum Role {
+  student
+  teacher
+  admin
+}
+
+model User {
+  id           String       @id @default(uuid())
+  name         String
+  email        String       @unique
+  passwordHash String
+  role         Role         @default(student)
+  blocked      Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  sessions     Session[]
+  courses      Course[]
+  studentWorks Work[]       @relation("StudentWorks")
+  teacherWorks Work[]       @relation("TeacherWorks")
+  files        StoredFile[]
+  events       AuditEvent[]
+}
+
+model Session {
+  tokenHash String   @id
+  userId    String
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  teacherId   String
+  createdAt   DateTime     @default(now())
+  teacher     User         @relation(fields: [teacherId], references: [id])
+  assignments Assignment[]
+
+  @@index([teacherId])
+}
+
+model Assignment {
+  id           String      @id @default(uuid())
+  courseId     String
+  title        String
+  description  String
+  criteria     String      @default("")
+  deadline     DateTime
+  attachmentId String?     @unique
+  createdAt    DateTime    @default(now())
+  course       Course      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  attachment   StoredFile? @relation("AssignmentFile", fields: [attachmentId], references: [id])
+  works        Work[]
+
+  @@index([courseId])
+}
+
+model StoredFile {
+  id         String      @id @default(uuid())
+  storageKey String      @unique
+  name       String
+  size       Int
+  ownerId    String
+  createdAt  DateTime    @default(now())
+  owner      User        @relation(fields: [ownerId], references: [id])
+  assignment Assignment? @relation("AssignmentFile")
+  work       Work?
+}
+
+model AuditEvent {
+  id          String   @id @default(uuid())
+  actorId     String
+  action      String
+  targetId    String
+  description String
+  createdAt   DateTime @default(now())
+  actor       User     @relation(fields: [actorId], references: [id])
+
+  @@index([createdAt])
 }

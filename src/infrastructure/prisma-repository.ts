@@ -18,7 +18,7 @@ export class PrismaRepository implements IReviewRepo, INotificationRepo {
     return this.db.$transaction(async (tx) => {
       const result = await tx.work.updateMany({
         where: { id, status: 'submitted' },
-        data: decision,
+        data: { ...decision, reviewedAt: new Date() },
       });
       if (result.count === 0) return null;
       const work = await tx.work.findUniqueOrThrow({ where: { id } });
@@ -27,6 +27,15 @@ export class PrismaRepository implements IReviewRepo, INotificationRepo {
           studentId: work.studentId,
           workId: id,
           message: decision.status === 'reviewed' ? 'Работа проверена' : 'Работа отклонена',
+        },
+      });
+      await tx.auditEvent.create({
+        data: {
+          actorId: work.teacherId,
+          action: `work.${decision.status}`,
+          targetId: id,
+          description:
+            decision.status === 'reviewed' ? `Оценка ${decision.grade}` : 'Работа отклонена',
         },
       });
       return work;
