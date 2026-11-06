@@ -27,6 +27,25 @@ beforeAll(async () => {
 beforeEach(async () => {
   await db.notification.deleteMany();
   await db.work.deleteMany();
+  await db.user.createMany({
+    data: [
+      {
+        id: 'teacher-1',
+        email: 'legacy-teacher@test.local',
+        name: 'Преподаватель',
+        passwordHash: 'fixture',
+        role: 'teacher',
+      },
+      {
+        id: 'student-1',
+        email: 'legacy-student@test.local',
+        name: 'Студент',
+        passwordHash: 'fixture',
+        role: 'student',
+      },
+    ],
+    skipDuplicates: true,
+  });
   await db.work.create({ data: { id: 'work-1', studentId: 'student-1', teacherId: 'teacher-1' } });
 });
 afterAll(async () => {

@@ -29,13 +29,27 @@ export function writeTestReport() {
   }
   walk(browser?.suites);
   const names = {
+    1: 'Регистрация и вход',
+    2: 'Разделение прав',
+    3: 'Хранение данных',
+    4: 'Создание курса',
+    5: 'Изменение и удаление курса',
+    6: 'Связи курсов и заданий',
+    7: 'Список курсов',
+    8: 'Поиск курсов',
+    9: 'Создание задания',
     10: 'Список и условие задания',
     11: 'Фильтр статусов',
+    12: 'Хранение файлов',
     13: 'Отправка работы',
     14: 'Переходы состояний',
     15: 'Очередь преподавателя',
     16: 'Оценка и отклонение',
+    17: 'Хранение рецензий',
     18: 'Уведомления',
+    19: 'История работ',
+    20: 'Управление пользователями',
+    21: 'Тестирование системы',
   };
   const tasks = Object.entries(names).map(([id, name]) => {
     const related = cases.filter((c) => [...c.title.matchAll(/T(\d+)/g)].some((m) => m[1] === id));
@@ -48,7 +62,7 @@ export function writeTestReport() {
   });
   writeFileSync(
     'reports/task-results.json',
-    JSON.stringify({ measuredAt: metrics.measuredAt, scope: 'prototype', tasks }, null, 2) + '\n',
+    JSON.stringify({ measuredAt: metrics.measuredAt, scope: 'release', tasks }, null, 2) + '\n',
   );
   const rows = (items) =>
     items
@@ -79,19 +93,19 @@ export function writeTestReport() {
     unit?.testResults.flatMap((file) =>
       file.assertionResults.map((test) => [test.fullName, test.status]),
     ) ?? [];
-  const html = `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>КПО №7 — результаты тестирования</title>
+  const html = `<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Релиз 1.0 — результаты тестирования</title>
 <style>body{max-width:1100px;margin:40px auto;padding:0 24px;font:16px/1.5 'Segoe UI',sans-serif;color:#24332a}h1{font-size:30px}h2{margin-top:32px}table{width:100%;border-collapse:collapse;margin:16px 0}td,th{text-align:left;border:1px solid #ccd2cd;padding:8px 12px;vertical-align:top}th{background:#edf2ee}.status{padding:14px;background:${metrics.qualityPassed ? '#e4f2e6' : '#ffe8e5'};}code{overflow-wrap:anywhere}.small{font-size:14px;color:#536058}</style>
-<h1>Лабораторная работа №7. Отчёт о тестировании</h1>
+<h1>Релиз 1.0. Отчёт о тестировании</h1>
 <p class="status">${metrics.qualityPassed ? 'Все обязательные проверки пройдены' : 'Есть ошибки или незавершённые проверки'}</p>
 <p>Замер: ${escape(metrics.measuredAt)}<br>Коммит: <code>${escape(metrics.commit)}</code></p>
 ${table(['Метрика', 'Значение'], metricsRows)}
-<p class="small">Покрытие: серверные исходники без точки запуска и хранилище прототипа. Компоненты React проверяются пользовательскими сценариями; их покрытие строк здесь не измерено. Сеть браузера отключена.</p>
+<p class="small">Покрытие: серверные исходники без точки запуска и хранилище прототипа. Компоненты React проверяются пользовательскими сценариями; их покрытие строк здесь не измерено. Прототип проверяется без сети; релиз — через локальный HTTP-сервер с PostgreSQL.</p>
 <h2>Задачи текущего этапа</h2>
 ${table(
   ['№', 'Задача', 'Связанных тестов', 'Результат'],
   tasks.map((t) => [t.id, t.name, t.tests, t.passed ? 'Пройдено' : 'Не подтверждено']),
 )}
-<p class="small">Один сценарий может проверять несколько задач. Эта таблица не означает завершение всех задач полного проекта.</p>
+<p class="small">Один сценарий может проверять несколько задач. Таблица связывает 21 задачу с браузерными проверками; права доступа и ошибочные запросы дополнительно проверяются интеграционными тестами.</p>
 <h2>Пользовательские сценарии</h2>${table(
     ['Сценарий', 'Статус', 'Время, с'],
     cases.map((c) => [

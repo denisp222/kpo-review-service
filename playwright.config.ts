@@ -19,8 +19,21 @@ export default defineConfig({
     browserName: 'chromium',
     headless: true,
     viewport: { width: 1366, height: 900 },
-    offline: true,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
+  webServer: {
+    command: 'node scripts/e2e-server.mjs',
+    url: 'http://127.0.0.1:3188/health',
+    reuseExistingServer: false,
+    timeout: 30000,
+  },
+  projects: [
+    { name: 'prototype', testMatch: 'prototype.spec.ts', use: { offline: true } },
+    {
+      name: 'release',
+      testMatch: 'release.spec.ts',
+      use: { baseURL: 'http://127.0.0.1:3188', offline: false },
+    },
+  ],
 });

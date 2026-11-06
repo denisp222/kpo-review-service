@@ -82,6 +82,7 @@ jobs:
           path: |
             dist/
             prototype/dist/
+            web/dist/
             reports/summary.html
             reports/metrics.json
             prisma/
